@@ -1,12 +1,23 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { HelloService } from './services/hello.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [CommonModule],
+  template: `<h1>{{ message }}</h1>`
 })
-export class AppComponent {
-  title = 'sampleprojectui';
+export class AppComponent implements OnInit {
+  message = 'Loading...';
+
+  constructor(private helloService: HelloService) { }
+
+  ngOnInit(): void {
+    this.helloService.getHello().subscribe({
+      next: (res) => this.message = res,
+      error: () => this.message = 'Failed to load message.'
+    });
+  }
 }
